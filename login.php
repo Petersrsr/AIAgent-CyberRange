@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // 对密码进行 MD5 加密
         $hashed_password = md5($password);
 
-        // 使用预处理语句防止 SQL 注入
-        $sql = "SELECT id, username FROM users WHERE username = ? AND password = ?";
+        // 使用预处理语句 (Prepared Statement) 来防止 SQL 注入，更安全
+        $sql = "SELECT id, username, nickname FROM users WHERE username = ? AND password = ?";
         $stmt = $conn->prepare($sql);
         
         $stmt->bind_param("ss", $username, $hashed_password);
@@ -45,8 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // 登录成功
             $user = $result->fetch_assoc();
             
-            // 存储 Session
+            // 将用户名和昵称存储到 Session 中
             $_SESSION['username'] = $user['username'];
+            $_SESSION['nickname'] = $user['nickname'];
             
             // 重定向到控制板页面
             header("Location: dashboard.php");
@@ -60,8 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// 关闭数据库连接
-$conn->close();
+// 关闭数据库连接 (此行将被移除)
+// $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +71,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>欢迎来到AI靶场</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>

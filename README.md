@@ -1,4 +1,78 @@
-# AIAgent-CyberRange
-An AI-driven dynamic cyber range platform for security training, red/blue team simulation, and automated attack/defense scenario generation. Supports multi-user login, behavior logging, AI analysis, and vulnerability customization.
-# AI 驱动的网络靶场平台
-一个由 AI Agent 驱动的动态攻防推演靶场平台，支持多用户注册登录、行为日志收集、AI 分析、攻击链重现与靶场动态构建，服务于安全教学与演练训练。
+# AI Agent驱动的动态攻防推演靶场平台 (PHP + MySQL)
+
+## 1. 项目简介
+
+本项目旨在构建一个基于 AI Agent 的动态网络安全攻防推演靶场平台。平台允许用户通过与 AI Agent 互动，在模拟真实的网络环境中进行攻防演练，从而提升实战技能。
+
+我们当前正在逐步构建此平台的基础设施，已完成核心的用户管理系统（注册、登录、个人资料管理等），这将为后续的靶场功能模块提供支撑。
+
+本项目所有模块都将遵循易于在宝塔面板 (PHP 7.4 + Nginx + MySQL) 环境中部署的标准。
+
+## 2. 功能特性
+
+- **用户注册**: 提供安全的注册功能，用户名仅限字母和数字，密码长度 6-20 位。
+- **用户登录**: 提供简洁的登录界面，并进行后端验证。
+- **会话管理**: 使用 PHP Session 机制跟踪用户登录状态。
+- **控制板**: 登录后进入功能控制板，展示可用的功能模块。
+- **个人资料**: 用户可以查看和编辑自己的详细资料（昵称、生日、性别、简介）。
+- **登出功能**: 用户可以安全退出登录。
+- **网站图标**: 所有页面均设置了网站图标 (Favicon)。
+
+## 3. 文件结构
+
+```
+.
+├── db.php             # 数据库连接脚本
+├── login.php          # 登录页面及逻辑处理
+├── register.php       # 注册页面及逻辑处理
+├── dashboard.php      # 登录后的控制板页面
+├── profile.php        # 用户个人资料页面
+├── edit_profile.php   # 编辑个人资料页面
+├── logout.php         # 登出逻辑处理脚本
+├── style.css          # 前端样式文件
+├── database.sql       # 数据库表结构（新安装用）
+├── logo.png           # 网站图标
+└── readme.md          # 项目说明文档
+```
+
+## 4. 部署与升级
+
+### 步骤 1: 部署文件
+
+将所有项目文件上传到你的网站根目录。
+
+### 步骤 2: 创建数据库和用户
+
+1.  登录你的 MySQL 数据库管理工具 (例如 phpMyAdmin)。
+2.  创建一个新的数据库，名称为 `aibachang`。
+3.  创建一个新的数据库用户，用户名为 `aibachang`，密码为 `aibachang`。
+4.  授予 `aibachang` 用户对 `aibachang` 数据库的所有权限。
+
+> **注意**: 如果你使用了不同的数据库名、用户名或密码，请务必更新 `db.php` 文件中的配置。
+
+### 步骤 3: 导入数据表
+
+-   **对于新用户**:
+    1.  在 `aibachang` 数据库中，选择 "导入" (Import) 功能。
+    2.  上传并执行 `database.sql` 文件。这将创建最新的 `users` 表并插入一条测试数据。
+
+**示例用户数据:**
+-   **用户名**: admin
+-   **密码**: 123456
+
+### 步骤 4: 访问应用
+
+在浏览器中访问 `http://你的域名/login.php`，即可看到登录界面。你可以使用示例账户登录，或注册新账户。
+
+## 5. 代码文件说明
+
+-   **`db.php`**: 负责连接到 MySQL 数据库。
+-   **`login.php`**: 显示登录表单，处理登录逻辑，成功后跳转到 `dashboard.php`。
+-   **`register.php`**: 提供安全的注册表单（含格式校验），处理新用户创建逻辑。
+-   **`dashboard.php`**: 用户登录后的主页面，展示功能占位符和用户菜单。
+-   **`profile.php`**: 显示用户的详细资料（用户名、昵称、生日等）。
+-   **`edit_profile.php`**: 提供表单和逻辑，用于修改个人资料。
+-   **`logout.php`**: 销毁 Session，实现用户登出。
+-   **`style.css`**: 为所有页面提供统一的美化样式。
+-   **`database.sql`**: 包含完整 `users` 表结构的 SQL 文件，供新安装使用。
+-   **`logo.png`**: 网站的浏览器标签页图标。

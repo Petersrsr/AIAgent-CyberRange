@@ -27,8 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($username) || empty($password) || empty($confirm_password)) {
         $error_message = '所有字段都不能为空';
-    } elseif (strlen($password) < 6) {
-        $error_message = '密码长度不能少于6位';
+    } elseif (!ctype_alnum($username)) {
+        $error_message = '用户名只能包含字母和数字';
+    } elseif (strlen($password) < 6 || strlen($password) > 20) {
+        $error_message = '密码长度必须在6到20位之间';
     } elseif ($password !== $confirm_password) {
         $error_message = '两次输入的密码不一致';
     } else {
@@ -58,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     }
 }
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +68,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户注册 - AI靶场</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -85,11 +87,11 @@ $conn->close();
             <?php endif; ?>
 
             <div class="input-group">
-                <label for="username">用户名</label>
+                <label for="username">用户名 (字母和数字)</label>
                 <input type="text" id="username" name="username" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
             </div>
             <div class="input-group">
-                <label for="password">密码（至少6位）</label>
+                <label for="password">密码 (6-20位)</label>
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="input-group">

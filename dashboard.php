@@ -22,6 +22,7 @@ $username = $_SESSION['username'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>控制板 - AI靶场</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,7 +30,7 @@ $username = $_SESSION['username'];
         <div class="header-content">
             <h1>AI靶场 控制板</h1>
             <div class="user-menu">
-                <span>欢迎, <?php echo htmlspecialchars($username); ?></span>
+                <span>欢迎, <?php echo htmlspecialchars($_SESSION['nickname'] ?: $_SESSION['username']); ?></span>
                 <a href="profile.php" class="btn-profile">个人资料</a>
                 <a href="logout.php" class="btn-logout">退出登录</a>
             </div>
