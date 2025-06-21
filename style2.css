@@ -1,0 +1,127 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+}
+.dashboard-header {
+    background-color: gray;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-content h1 {
+    margin: 0;
+    text-align: left;
+}
+.user-menu {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+.user-menu a {
+    color: white;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #333;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.user-menu a:hover {
+    background-color: #555;
+}
+.disclaimer {
+    text-align: center;
+    margin-top: 16px;
+    color: #888;
+    font-size: 13px;
+}
+.login-form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.login-form-row label {
+    width: 70px;
+    margin-right: 8px;
+    text-align: right;
+    font-size: 15px;
+}
+.login-form-row input {
+    flex: 0 0 160px;
+    width: 180px;
+    min-width: 80px;
+    max-width: 200px;
+    padding: 6px 8px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.login-form-btn {
+    width: 100%;
+    background: #20a53a;
+    color: #fff;
+    padding: 8px 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.login-form-btn:hover {
+    background: #188c2c;
+}
+.default-cred-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #888;
+}
+/* ===============================
+   页脚样式 - 固定底部
+=============================== */
+.copyright-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #f0f2f5;
+    text-align: center;
+    color: #222;
+    font-size: 12px;
+    margin: 0;
+    padding: 10px 0 8px 0;
+    letter-spacing: 1px;
+    z-index: 100;
+    border-top: 1px solid #e0e0e0;
+}
+.login-form-btn:hover {
+    cursor: pointer;
+}
+.login-form-container:hover {
+    cursor: default;
+}
+/* ===============================
+   建议信息样式
+=============================== */
+.brute-force-advice {
+    margin-top: 18px;
+    color: #b36b00;
+    background: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 5px;
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: left;
+}
+/* 为了避免底部声明遮挡内容，给body加padding-bottom */
+body {
+    padding-bottom: 48px;
+}

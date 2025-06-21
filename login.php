@@ -70,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎来到AI靶场</title>
+    <title>基于DeepSeek的网络安全靶场</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="login-container">
-        <h2>欢迎来到AI靶场</h2>
+        <h2>基于DeepSeek的网络安全靶场</h2>
         <form action="login.php" method="post">
             
             <?php if (!empty($error_message)): ?>
