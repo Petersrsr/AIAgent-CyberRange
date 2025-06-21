@@ -67,13 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户注册 - AI靶场</title>
+    <title>注册 - 东海学院网络靶场</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="login-container">
-        <h2>创建您的账户</h2>
+        <h2>注册 - 东海学院网络靶场</h2>
         <form action="register.php" method="post">
             
             <?php if (!empty($error_message)): ?>

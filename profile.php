@@ -30,14 +30,14 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人资料 - AI靶场</title>
+    <title>个人资料 - 东海学院网络靶场</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="dashboard-header">
         <div class="header-content">
-            <h1><a href="dashboard.php" style="color: white; text-decoration: none;">AI靶场 控制板</a></h1>
+            <h1><a href="dashboard.php">东海学院网络靶场 控制板</a></h1>
             <div class="user-menu">
                 <span>欢迎, <?php echo htmlspecialchars($_SESSION['nickname'] ?: $_SESSION['username']); ?></span>
                 <a href="profile.php" class="btn-profile">个人资料</a>
@@ -46,22 +46,45 @@ $stmt->close();
         </div>
     </div>
 
-    <div class="profile-container">
-        <h2>个人资料</h2>
-        <div class="profile-info">
-            <p><strong>用户名:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
-            <p><strong>昵称:</strong> <?php echo htmlspecialchars($user['nickname'] ?: '未设置'); ?></p>
-            <p><strong>生日:</strong> <?php echo htmlspecialchars($user['birthdate'] ?: '未设置'); ?></p>
-            <p><strong>性别:</strong> <?php echo htmlspecialchars($user['gender'] ?: '未设置'); ?></p>
-            <p><strong>个人简介:</strong></p>
-            <div class="bio-box">
-                <?php echo nl2br(htmlspecialchars($user['bio'] ?: '未设置')); ?>
+    <div class="main-content">
+        <div class="profile-layout">
+            <div class="profile-sidebar">
+                <div class="profile-avatar-placeholder">头像</div>
+                <h3><?php echo htmlspecialchars($user['username']); ?></h3>
+            </div>
+            <div class="profile-main">
+                <h2>个人资料</h2>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <strong>昵称:</strong>
+                        <span><?php echo htmlspecialchars($user['nickname'] ?: '未设置'); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>生日:</strong>
+                        <span><?php echo htmlspecialchars($user['birthdate'] ?: '未设置'); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>性别:</strong>
+                        <span><?php echo htmlspecialchars($user['gender'] ?: '未设置'); ?></span>
+                    </div>
+                    <div class="info-item bio-item">
+                        <strong>个人简介:</strong>
+                        <div class="bio-box">
+                            <?php echo htmlspecialchars($user['bio'] ?: '这个人很懒，什么都没有留下...'); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions" style="margin-top: 25px;">
+                    <a href="edit_profile.php" class="btn">编辑资料</a>
+                    <a href="dashboard.php" class="btn-cancel">返回控制板</a>
+                </div>
             </div>
         </div>
-        <div class="form-actions">
-            <a href="edit_profile.php" class="btn">编辑资料</a>
-            <a href="dashboard.php" class="btn-cancel">返回控制板</a>
-        </div>
     </div>
+
+    <footer class="site-footer">
+        <p>版权所有 &copy; <?php echo date("Y"); ?> 上海市东海职业技术学院</p>
+        <p><a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2025126528号-1</a></p>
+    </footer>
 </body>
 </html>

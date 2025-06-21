@@ -21,14 +21,14 @@ $username = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>控制板 - AI靶场</title>
+    <title>控制板 - 东海学院网络靶场</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="dashboard-header">
         <div class="header-content">
-            <h1>AI靶场 控制板</h1>
+            <h1><a href="dashboard.php">东海学院网络靶场 控制板</a></h1>
             <div class="user-menu">
                 <span>欢迎, <?php echo htmlspecialchars($_SESSION['nickname'] ?: $_SESSION['username']); ?></span>
                 <a href="profile.php" class="btn-profile">个人资料</a>
@@ -42,91 +42,78 @@ $username = $_SESSION['username'];
         <div class="features-grid">
             <!-- 靶场功能卡片 -->
             <div class="feature-card">
-                <h3>暴力破解</h3>
-                <p>暴力破解通过尝试所有可能的密码组合来破解密码的方法。</p>
-                <a href="forcebreak.php" class="btn">进入靶场</a>
+                <h3>暴力破解 (Brute Force)</h3>
+                <p>模拟一个登录框，学习如何使用自动化工具，通过不断尝试来破解用户密码。</p>
+                <a href="vulnerabilities/forcebreak.php" class="btn">进入靶场</a>
             </div>
 
             <div class="feature-card">
-                <h3>命令注入</h3>
-                <p>命令注入是一种通过注入恶意命令来执行非预期操作的方法。</p>
-                <a href="command.php" class="btn">进入靶场</a>
+                <h3>命令注入 (Command Injection)</h3>
+                <p>一个模拟Ping功能的工具，学习如何利用输入验证不当，执行未授权的系统命令。</p>
+                <a href="vulnerabilities/command.php" class="btn">进入靶场</a>
             </div>
 
             <div class="feature-card">
-                <h3>CSRF跨站请求伪造</h3>
-                <p>csrf是一种通过伪造请求来执行非预期操作的方法。</p>
-                <a href="csrf.php" class="btn">进入靶场</a>
+                <h3>跨站请求伪造 (CSRF)</h3>
+                <p>一个模拟修改密码的页面，学习攻击者如何诱导用户在不知情的情况下执行操作。</p>
+                <a href="vulnerabilities/csrf.php" class="btn">进入靶场</a>
             </div>
              <div class="feature-card">
-                <h3>文件包含</h3>
-                <p>文件包含是通过包含恶意文件来执行非预期操作的方法。</p>
-                <a href="file.php" class="btn">进入靶场</a>
+                <h3>文件包含 (File Inclusion)</h3>
+                <p>一个文件查看功能，学习如何利用此功能读取甚至执行服务器上的未授权文件。</p>
+                <a href="vulnerabilities/file.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
-                <h3>文件上传</h3>
-                <p>文件上传是一种通过上传恶意文件来执行非预期操作的方法。</p>
-                <a href="upload.php" class="btn">进入靶场</a>
+                <h3>文件上传 (File Upload)</h3>
+                <p>一个文件上传功能，学习如何绕过验证上传WebShell，从而控制服务器。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>不安全文件下载</h3>
-                <p>不安全文件下载是通过下载恶意文件来执行非预期操作的方法。</p>
-                <a href="download.php" class="btn">进入靶场</a>
+                <h3>不安全的验证码 (Insecure CAPTCHA)</h3>
+                <p>一个存在逻辑漏洞的验证码功能，学习如何绕过或滥用验证码保护机制。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>SQL注入</h3>
-                <p>SQL注入是通过注入恶意SQL语句来执行非预期操作的方法。</p>
-                <a href="sql.php" class="btn">进入靶场</a>
+                <h3>SQL注入 (SQL Injection)</h3>
+                <p>最经典的注入漏洞，学习如何通过构造SQL查询来获取、修改或删除数据库中的数据。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
+            </div>
+             <div class="feature-card">
+                <h3>SQL盲注 (SQLi - Blind)</h3>
+                <p>在页面没有明确错误回显的情况下，学习如何利用布尔逻辑或时间延迟来推断数据。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>宽字节注入</h3>
-                <p>宽字节注入是通过注入恶意SQL语句来执行非预期操作的方法。</p>
-                <a href="wide.php" class="btn">进入靶场</a>
+                <h3>反射型XSS (Reflected XSS)</h3>
+                <p>恶意脚本被注入到URL中，当用户点击链接时，脚本在浏览器中执行。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>XSS跨站脚本攻击</h3>
-                <p>XSS跨站脚本攻击是通过注入恶意脚本执行非预期操作的方法。</p>
-                <a href="xss.php" class="btn">进入靶场</a>
+                <h3>存储型XSS (Stored XSS)</h3>
+                <p>恶意脚本被存储在服务器上（如文章或评论中），所有访问该页面的用户都会受到攻击。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>XXE注入</h3>
-                <p>XXE注入是通过注入恶意XML数据执行非预期操作的方法。</p>
-                <a href="xxe.php" class="btn">进入靶场</a>
+                <h3>DOM型XSS (DOM Based XSS)</h3>
+                <p>一种更为高级的XSS，在不与服务器交互的情况下，通过修改DOM结构触发攻击。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>敏感信息泄露</h3>
-                <p>敏感信息泄露是通过泄露敏感信息来执行非预期操作的方法。</p>
-                <a href="sensitive.php" class="btn">进入靶场</a>
+                <h3>弱会话ID (Weak Session IDs)</h3>
+                <p>学习服务器生成的会话ID的规律，并尝试预测有效的会话ID来劫持其他用户。</p>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
             <div class="feature-card">
-                <h3>绕过内容安全策略</h3>
+                <h3>绕过内容安全策略 (CSP)</h3>
                 <p>此内容是通过绕过内容安全策略来执行非预期操作的方法。</p>
-                <a href="csp.php" class="btn">进入靶场</a>
+                <a href="#" class="btn disabled">敬请期待</a>
             </div>
-            <div class="feature-card">
-                <h3>URL重定向</h3>
-                <p>URL重定向是通过重定向到恶意URL来执行非预期操作的方法。</p>
-                <a href="redirect.php" class="btn">进入靶场</a>
-            </div>
-            <div class="feature-card">
-                <h3>SSRF</h3>
-                <p>SSRF是通过SSRF来执行非预期操作的方法。</p>
-                <a href="ssrf.php" class="btn">进入靶场</a>
-            </div>
-            <div class="feature-card">
-                <h3>OVER PERMISSION</h3>
-                <p>越权操作是通过绕过权限来执行非预期操作的方法。</p>
-                <a href="over.php" class="btn">进入靶场</a>
-            </div>
-             <div class="feature-card">
-                <h3>目录遍历</h3>
-                <p>目录遍历是通过遍历目录来执行非预期操作的方法。</p>
-                <a href="traversal.php" class="btn">进入靶场</a>
-            </div> 
-            
-            
-            
         </div>
     </div>
+
+    <footer class="site-footer">
+        <p>版权所有 &copy; <?php echo date("Y"); ?> 上海市东海职业技术学院</p>
+        <p><a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2025126528号-1</a></p>
+    </footer>
 </body>
 </html>

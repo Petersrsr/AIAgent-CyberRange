@@ -70,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>基于DeepSeek的网络安全靶场</title>
+    <title>登录 - 东海学院网络靶场</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="login-container">
-        <h2>基于DeepSeek的网络安全靶场</h2>
+        <h2>登录 - 东海学院网络靶场</h2>
         <form action="login.php" method="post">
             
             <?php if (!empty($error_message)): ?>
@@ -93,11 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="password">密码</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn">登录</button>
+            <div class="input-group">
+                <button type="submit" class="btn">登录</button>
+            </div>
             <div class="register-link">
-                <p>还没有账户？ <a href="register.php">立即注册</a></p>
+                <a href="forgot_password.php">忘记密码?</a> | <a href="register.php">注册新账户</a>
             </div>
         </form>
     </div>
+
+    <footer class="site-footer">
+        <p>版权所有 &copy; <?php echo date("Y"); ?> 上海市东海职业技术学院</p>
+        <p><a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2025126528号-1</a></p>
+    </footer>
 </body>
 </html>

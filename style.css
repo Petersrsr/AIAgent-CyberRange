@@ -3,6 +3,9 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .login-container {
@@ -12,8 +15,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 360px;
     text-align: center;
-    /* The following properties are for when the container is a flex item */
-    margin: 10vh auto;
+    margin: auto; /* Use auto margin for vertical centering in flex container */
 }
 
 h2 {
@@ -53,28 +55,40 @@ input[type="password"] {
     transition: background-color 0.3s;
 }
 
+/* Ensure .btn applied to <a> tags looks like a button */
+a.btn {
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
 .btn:hover {
     background-color: #0056b3;
 }
 
+.btn.disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
 .error-message {
-    color: #dc3545;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    color: #721c24;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    text-align: center;
 }
 
 .success-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
     color: #155724;
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    text-align: center;
 }
 
 .register-link {
@@ -112,6 +126,11 @@ input[type="password"] {
     font-size: 1.5rem;
 }
 
+.header-content h1 a {
+    color: white;
+    text-decoration: none;
+}
+
 .user-menu span {
     margin-right: 1rem;
 }
@@ -140,6 +159,10 @@ input[type="password"] {
     background-color: #c82333;
 }
 
+.dashboard-container, .main-content {
+    flex: 1 0 auto; /* Allow these containers to grow and push the footer down */
+}
+
 .dashboard-container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -148,7 +171,7 @@ input[type="password"] {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin-top: 1.5rem;
 }
@@ -245,20 +268,287 @@ input[type="password"] {
 
 .form-actions .btn {
     width: auto;
-    padding: 0.75rem 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
-.form-actions .btn-cancel {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
+.btn-cancel {
     background-color: #6c757d;
-    color: white;
-    text-align: center;
+    color: white !important; /* Ensure high specificity */
+    padding: 0.6rem 1.2rem;
     border-radius: 4px;
     text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
     transition: background-color 0.3s;
 }
 
-.form-actions .btn-cancel:hover {
+.btn-cancel:hover {
     background-color: #5a6268;
+    text-decoration: none;
+}
+
+/* ===============================
+   Vulnerability Lab Page Styles 
+=============================== */
+.lab-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.lab-container h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.form-row {
+    margin-bottom: 1rem;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-btn {
+    background: #1890ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.form-btn:hover {
+    background: #40a9ff;
+}
+
+.result-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.advice-box {
+    margin-top: 1.5rem;
+    padding: 1rem 1.2rem;
+    color: #b36b00;
+    background: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.advice-box h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.level-selector {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.level-selector a {
+    margin: 0 10px;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background: #f7f7f7;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.level-selector a.active,
+.level-selector a:hover {
+    background: #1890ff;
+    color: white;
+    border-color: #1890ff;
+    font-weight: bold;
+}
+
+/* Header navigation buttons */
+.user-menu .btn-home,
+.user-menu .btn-help,
+.user-menu .btn-prev,
+.user-menu .btn-next {
+    background-color: #6c757d;
+}
+.user-menu .btn-home:hover,
+.user-menu .btn-help:hover,
+.user-menu .btn-prev:hover,
+.user-menu .btn-next:hover {
+    background-color: #5a6268;
+}
+
+/* Simple, non-fixed footer */
+.copyright-footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    color: #666;
+    font-size: 0.9rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Common Page Structure */
+.main-content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px; /* Add horizontal padding for smaller screens */
+}
+
+/* Card-based Layouts (For Profile, Edit Profile, etc.) */
+.form-card, .profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.form-card h2, .profile-card h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    font-size: 22px;
+    color: #333;
+}
+
+/* Profile Display Styles */
+.profile-info {
+    font-size: 16px;
+}
+
+.profile-info .info-item {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.profile-info .info-item strong {
+    flex-basis: 100px;
+    flex-shrink: 0;
+    font-weight: bold;
+    color: #555;
+}
+
+.profile-info .info-item span {
+    color: #333;
+}
+
+.profile-info .info-item.bio-item {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-info .bio-box {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 8px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 80px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left; /* Explicitly align text to the left */
+}
+
+/* --- Site Footer --- */
+.site-footer {
+    background-color: #343a40; /* 与头部一致的深色背景 */
+    color: #adb5bd; /* 柔和的灰色文字 */
+    font-size: 0.85rem;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px; /* 与页面主要内容有足够的间距 */
+    border-top: 1px solid #495057;
+}
+
+.site-footer p {
+    margin: 5px 0;
+}
+
+.site-footer a {
+    color: #ced4da; /* 比普通文字稍亮的链接颜色 */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.site-footer a:hover {
+    color: #fff; /* 鼠标悬停时变白 */
+    text-decoration: underline;
+}
+
+/* --- Profile Page Two-Column Layout --- */
+.profile-layout {
+    display: flex;
+    gap: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 40px 30px;
+}
+
+.profile-sidebar {
+    flex: 0 0 200px; /* 固定宽度，不拉伸不收缩 */
+    text-align: center;
+    border-right: 1px solid #eee;
+    padding-right: 30px;
+}
+
+.profile-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #adb5bd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 auto 20px auto;
+}
+
+.profile-sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    word-wrap: break-word;
+}
+
+.profile-sidebar .description {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.profile-main {
+    flex: 1; /* 占据剩余所有空间 */
+    min-width: 0; /* 防止内容溢出 */
+}
+
+.profile-main h2 {
+    margin-top: 0;
 }
