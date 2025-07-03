@@ -58,7 +58,7 @@ $username = $_SESSION['username'];
                 <p>一个模拟修改密码的页面，学习攻击者如何诱导用户在不知情的情况下执行操作。</p>
                 <a href="vulnerabilities/csrf.php" class="btn">进入靶场</a>
             </div>
-             <div class="feature-card">
+            <div class="feature-card">
                 <h3>文件包含 (File Inclusion)</h3>
                 <p>一个文件查看功能，学习如何利用此功能读取甚至执行服务器上的未授权文件。</p>
                 <a href="vulnerabilities/file.php" class="btn">进入靶场</a>
@@ -66,47 +66,47 @@ $username = $_SESSION['username'];
             <div class="feature-card">
                 <h3>文件上传 (File Upload)</h3>
                 <p>一个文件上传功能，学习如何绕过验证上传WebShell，从而控制服务器。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/upload.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>不安全的验证码 (Insecure CAPTCHA)</h3>
                 <p>一个存在逻辑漏洞的验证码功能，学习如何绕过或滥用验证码保护机制。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/insecure.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>SQL注入 (SQL Injection)</h3>
                 <p>最经典的注入漏洞，学习如何通过构造SQL查询来获取、修改或删除数据库中的数据。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/injection.php" class="btn">进入靶场</a>
             </div>
-             <div class="feature-card">
+            <div class="feature-card">
                 <h3>SQL盲注 (SQLi - Blind)</h3>
                 <p>在页面没有明确错误回显的情况下，学习如何利用布尔逻辑或时间延迟来推断数据。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/blind.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>反射型XSS (Reflected XSS)</h3>
                 <p>恶意脚本被注入到URL中，当用户点击链接时，脚本在浏览器中执行。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/Reflected.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>存储型XSS (Stored XSS)</h3>
                 <p>恶意脚本被存储在服务器上（如文章或评论中），所有访问该页面的用户都会受到攻击。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/xss.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>DOM型XSS (DOM Based XSS)</h3>
                 <p>一种更为高级的XSS，在不与服务器交互的情况下，通过修改DOM结构触发攻击。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/Dom.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>弱会话ID (Weak Session IDs)</h3>
                 <p>学习服务器生成的会话ID的规律，并尝试预测有效的会话ID来劫持其他用户。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/weak.php" class="btn">进入靶场</a>
             </div>
             <div class="feature-card">
                 <h3>绕过内容安全策略 (CSP)</h3>
                 <p>此内容是通过绕过内容安全策略来执行非预期操作的方法。</p>
-                <a href="#" class="btn disabled">敬请期待</a>
+                <a href="vulnerabilities/csp.php" class="btn">进入靶场</a>
             </div>
         </div>
     </div>

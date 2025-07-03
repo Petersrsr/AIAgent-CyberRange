@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['page'])) {
                 <a href="../dashboard.php" class="btn-home">返回首页</a>
                 <a href="../help.php" class="btn-help">帮助</a>
                 <a href="csrf.php" class="btn-prev">上一关</a>
-                <a href="forcebreak.php" class="btn-next">下一关</a>
+                <a href="upload.php" class="btn-next">下一关</a>
             </div>
         </div>
     </div>
