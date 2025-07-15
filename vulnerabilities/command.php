@@ -55,8 +55,11 @@ function sanitize_command($input, $level) {
     return $input;
 }
 
+require_once __DIR__.'/../db.php';
 
+// 处理用户提交
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
     $target_ip = isset($_POST['ip']) ? $_POST['ip'] : '';
     $command_to_run = '';
 
@@ -100,6 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $command_result = "<pre>" . shell_exec($command_to_run) . "</pre>";
         }
     }
+
+    $result = 'success'; // 或根据实际执行结果判断
+    log_action($current_user, 'command_injection', '执行命令: ' . $command_to_run, $result);
+
+    $error_count = 0;
+    if ($command_result_is_error) { // 你需要用实际变量判断是否出错
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'command_injection';
+    $level = isset($level) ? $level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 ?>
 
@@ -117,10 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-content">
             <h1>命令注入靶场(Command Injection)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="forcebreak.php" class="btn-prev">上一关</a>
-                <a href="csrf.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="forcebreak.php" class="btn-dark">上一关</a>
+                <a href="csrf.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

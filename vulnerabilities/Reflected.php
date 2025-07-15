@@ -53,6 +53,7 @@ function sanitize_xss($input, $level) {
 
 $user_input = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
     $user_input = isset($_POST['keyword']) ? $_POST['keyword'] : '';
     $display_input = '';
     if ($level == 1) {
@@ -73,6 +74,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($display_input !== '' && $xss_result === '') {
         $xss_result = "<div>你搜索的关键词：<span class='xss-echo'>{$display_input}</span></div>";
     }
+    // 这里假设有变量 $reflected_result 表示操作结果
+    $result = (isset($reflected_result) && strpos($reflected_result, '成功') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'reflected_xss', '反射型XSS操作', $result);
+
+    $error_count = 0;
+    if (isset($reflected_message) && strpos($reflected_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'reflected';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 ?>
 
@@ -94,10 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-content">
             <h1>反射型XSS靶场(Reflected XSS)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="blind.php" class="btn-prev">上一关</a>
-                <a href="xss.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="blind.php" class="btn-dark">上一关</a>
+                <a href="xss.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

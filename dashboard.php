@@ -29,10 +29,14 @@ $username = $_SESSION['username'];
     <div class="dashboard-header">
         <div class="header-content">
             <h1><a href="dashboard.php">东海学院网络靶场 控制板</a></h1>
-            <div class="user-menu">
-                <span>欢迎, <?php echo htmlspecialchars($_SESSION['nickname'] ?: $_SESSION['username']); ?></span>
-                <a href="profile.php" class="btn-profile">个人资料</a>
-                <a href="logout.php" class="btn-logout">退出登录</a>
+            <div class="user-menu" style="display:flex;align-items:center;gap:5px;">
+                <span style="color:#fff;font-weight:500;">欢迎, <?php echo htmlspecialchars($_SESSION['nickname'] ?: $_SESSION['username']); ?></span>
+                <a href="profile.php" class="btn-dark">个人资料</a>
+                <a href="logout.php" class="btn-dark" style="margin-left:5px;">退出登录</a>
+                <a href="role_analysis.php" class="btn-dark" style="margin-left:5px;">查看报告</a>
+                <?php if ($_SESSION['username'] === 'admin'): ?>
+                    <a href="log_analysis.php" class="btn-dark">日志分析</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -117,3 +121,20 @@ $username = $_SESSION['username'];
     </footer>
 </body>
 </html>
+<style>
+.btn-dark {
+    background: #343a40 !important;
+    color: #fff !important;
+    border-radius: 4px;
+    padding: 6px 16px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border: none;
+    transition: background 0.2s;
+    box-shadow: none;
+}
+.btn-dark:hover {
+    background: #495057 !important;
+}
+</style>

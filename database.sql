@@ -25,3 +25,24 @@ CREATE TABLE `users`  (
 -- 密码 '123456' 的 MD5 值为 'e10adc3949ba59abbe56e057f20f883e'
 -- ----------------------------
 INSERT INTO `users` (`username`, `password`) VALUES ('admin', 'e10adc3949ba59abbe56e057f20f883e'); 
+INSERT INTO `users` (`username`, `password`) VALUES ('luoshuhong', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user1', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user2', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user3', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user4', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user5', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `users` (`username`, `password`) VALUES ('user6', 'e10adc3949ba59abbe56e057f20f883e'); 
+
+-- ----------------------------
+-- 表结构 `challenge_records`
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS challenge_records (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user VARCHAR(50) NOT NULL,
+  challenge VARCHAR(100) NOT NULL,
+  level ENUM('easy','medium','hard','impossible') NOT NULL,
+  completed_at DATETIME NOT NULL,
+  time_used INT DEFAULT 0,
+  error_count INT NOT NULL DEFAULT 0
+); 
+ALTER TABLE challenge_records ADD COLUMN action_detail VARCHAR(255) DEFAULT ''; 

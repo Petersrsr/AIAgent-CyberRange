@@ -13,11 +13,8 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// ---- 靶场逻辑 ----
-// 确保 db.php 的路径正确
-if (isset($_GET['level']) && $_GET['level'] == 4) {
+// 统一引入db.php，保证log_action和$conn可用
     require_once __DIR__ . '/../db.php';
-}
 
 
 $level = isset($_GET['level']) ? intval($_GET['level']) : 1;
@@ -34,6 +31,7 @@ if ($level >= 3) {
 // 处理表单提交
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $can_process = false;
+    $current_user = $_SESSION['username'] ?? 'guest';
 
     // Level 1: 无任何防护
     if ($level == 1) {
@@ -114,6 +112,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         $token = $_SESSION['csrf_token'];
     }
+    // 这里假设有变量 $csrf_result 表示操作结果
+    $result = (isset($csrf_message) && strpos($csrf_message, '成功') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'csrf', 'CSRF操作', $result);
+
+    $error_count = 0;
+    if (isset(
+        $csrf_message) && strpos($csrf_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'csrf';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 ?>
 
@@ -132,10 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-content">
             <h1>CSRF靶场</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="command.php" class="btn-prev">上一关</a>
-                <a href="file.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="command.php" class="btn-dark">上一关</a>
+                <a href="file.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

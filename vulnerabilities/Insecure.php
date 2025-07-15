@@ -88,6 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     // 每次提交后都重新生成验证码
     $_SESSION['captcha_code'] = generate_captcha($level);
+
+    $error_count = 0;
+    if (isset($captcha_result) && strpos($captcha_result, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'insecure';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 } else {
     // 首次访问或GET，生成验证码
     $_SESSION['captcha_code'] = generate_captcha($level);
@@ -109,10 +123,10 @@ $captcha_code = $_SESSION['captcha_code'];
         <div class="header-content">
             <h1>Insecure CAPTCHA 靶场</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="upload.php" class="btn-prev">上一关</a>
-                <a href="injection.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="upload.php" class="btn-dark">上一关</a>
+                <a href="injection.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

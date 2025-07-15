@@ -25,11 +25,7 @@ $sqli_result = '';
 $sqli_message = '';
 $blocked_message = '';
 
-// 数据库连接（修正用户名和密码为aibachang）
-$mysqli = new mysqli("localhost", "aibachang", "aibachang", "aibachang");
-if ($mysqli->connect_errno) {
-    die("数据库连接失败: " . $mysqli->connect_error);
-}
+require_once __DIR__.'/../db.php';
 
 // 安全过滤函数
 function sanitize_sql($input, $level) {
@@ -57,6 +53,7 @@ function sanitize_sql($input, $level) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
     $userid = isset($_POST['userid']) ? $_POST['userid'] : '';
     $query = '';
     $rows = [];
@@ -64,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Level 1 (Low): 无防护
     if ($level == 1) {
         $query = "SELECT id, username, email FROM users WHERE id = '$userid'";
-        $result = $mysqli->query($query);
+        $result = $conn->query($query);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $rows[] = $row;
@@ -79,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userid = sanitize_sql($userid, 2);
         if ($userid !== null) {
             $query = "SELECT id, username, email FROM users WHERE id = '$userid'";
-            $result = $mysqli->query($query);
+            $result = $conn->query($query);
             if ($result) {
                 while ($row = $result->fetch_assoc()) {
                     $rows[] = $row;
@@ -97,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userid = sanitize_sql($userid, 3);
         if ($userid !== null) {
             $query = "SELECT id, username, email FROM users WHERE id = $userid";
-            $result = $mysqli->query($query);
+            $result = $conn->query($query);
             if ($result) {
                 while ($row = $result->fetch_assoc()) {
                     $rows[] = $row;
@@ -113,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Level 4 (Impossible): 预处理语句
     if ($level == 4) {
         if (preg_match('/^\d+$/', $userid)) {
-            $stmt = $mysqli->prepare("SELECT id, username, email FROM users WHERE id = ?");
+            $stmt = $conn->prepare("SELECT id, username, email FROM users WHERE id = ?");
             $stmt->bind_param("i", $userid);
             $stmt->execute();
             $res = $stmt->get_result();
@@ -137,6 +134,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($sqli_result)) {
         $sqli_result = "<pre>未查询到结果。</pre>";
     }
+    $result = (isset($sqli_result) && strpos($sqli_result, 'SQL:') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'injection', 'SQL注入操作', $result);
+
+    $error_count = 0;
+    if (isset($sqli_message) && strpos($sqli_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'injection';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 ?>
 
@@ -159,10 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-content">
             <h1>SQL注入靶场(SQL Injection)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="insecure.php" class="btn-prev">上一关</a>
-                <a href="blind.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="insecure.php" class="btn-dark">上一关</a>
+                <a href="blind.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

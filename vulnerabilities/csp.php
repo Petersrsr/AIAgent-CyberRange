@@ -16,6 +16,9 @@ if (!isset($_SESSION['username'])) {
 // 获取当前登录用户名
 $username = $_SESSION['username'];
 
+// 引入数据库连接文件
+require_once __DIR__.'/../db.php';
+
 // ---- 靶场逻辑 ----
 
 // 默认难度级别
@@ -51,6 +54,24 @@ if ($csp_header) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $custom_script = isset($_POST['custom_script']) ? $_POST['custom_script'] : '';
     $csp_result = $custom_script;
+    $current_user = $_SESSION['username'] ?? 'guest';
+    // 这里假设有变量 $csp_result 表示操作结果
+    $result = (isset($csp_result) && strpos($csp_result, '成功') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'csp', 'CSP操作', $result);
+
+    $error_count = 0;
+    if (isset($csp_message) && strpos($csp_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'csp';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 
 ?>
@@ -74,9 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-content">
             <h1>CSP靶场(Content Security Policy)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="weak.php" class="btn-prev">上一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="weak.php" class="btn-dark">上一关</a>
             </div>
         </div>
     </div>

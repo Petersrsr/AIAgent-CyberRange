@@ -552,3 +552,89 @@ a.btn {
 .profile-main h2 {
     margin-top: 0;
 }
+
+.dashboard-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px #0001;
+    padding: 16px 16px 10px 16px; /* 缩小内边距 */
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0; /* 移除多余间距 */
+    min-height: 120px; /* 可根据实际内容再调小 */
+}
+.dashboard-card .card-title {
+    font-size: 1.08em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px; /* 缩小标题下间距 */
+}
+.dashboard-charts-row {
+    display: flex;
+    gap: 18px; /* 缩小卡片间距 */
+}
+.stat-card .stat-info-bar { display: none !important; }
+.stat-blue, .stat-red, .stat-green, .stat-purple { border-top: none !important; }
+
+/* 用户靶场表现报告弹窗样式（纯CSS弹窗） */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; width: 100%; height: 100%;
+  overflow: auto; background: rgba(0,0,0,0.3);
+}
+#reportModal:target {
+  display: block;
+}
+.modal-content {
+  background: #fff; margin: 8% auto; padding: 30px 40px;
+  border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  width: 350px; text-align: center; position: relative;
+  max-width: 96vw;
+}
+.modal-content h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #222;
+}
+.modal .close {
+  position: absolute; right: 18px; top: 10px; font-size: 28px; cursor: pointer; color: #888; text-decoration: none;
+}
+#reportContent table {
+  width: 100%; border-collapse: collapse; margin-bottom: 10px;
+}
+#reportContent th, #reportContent td {
+  padding: 6px 0; text-align: left;
+}
+#reportContent th {
+  color: #555; font-weight: 600; border-bottom: 1.5px solid #eee;
+}
+#reportContent td {
+  color: #333;
+}
+#reportContent tr:not(:last-child) td {
+  border-bottom: 1px solid #f2f2f2;
+}
+#reportContent {
+  min-height: 120px;
+}
+
+.challenge-table th, .challenge-table td {
+  padding: 8px 0; /* 减小左右间距 */
+  text-align: center;
+}
+.challenge-table th:nth-child(1), .challenge-table td:nth-child(1) {
+  width: 40%;
+  min-width: 90px;
+  text-align: left;
+}
+.challenge-table th:nth-child(2), .challenge-table td:nth-child(2),
+.challenge-table th:nth-child(3), .challenge-table td:nth-child(3) {
+  width: 30%;
+  max-width: 80px;
+  min-width: 60px;
+  text-align: center;
+}

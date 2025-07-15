@@ -68,44 +68,69 @@ function sanitize_upload($filename, $level) {
     return true;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $file = $_FILES['file'];
-    $filename = $file['name'];
-    $tmp_name = $file['tmp_name'];
-    $upload_dir = __DIR__ . '/uploads/';
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-    $can_upload = false;
+require_once __DIR__.'/../db.php';
 
-    // Level 1 (Low): 无防护
-    if ($level == 1) {
-        $can_upload = true;
-    }
-    // Level 2 (Medium): 黑名单过滤
-    if ($level == 2) {
-        $can_upload = sanitize_upload($filename, 2);
-        if (!$can_upload) $upload_result = $blocked_message;
-    }
-    // Level 3 (High): 仅允许图片类型
-    if ($level == 3) {
-        $can_upload = sanitize_upload($filename, 3);
-        if (!$can_upload) $upload_result = $blocked_message;
-    }
-    // Level 4 (Impossible): 严格MIME类型+后缀白名单
-    if ($level == 4) {
-        $can_upload = sanitize_upload($filename, 4);
-        if (!$can_upload) $upload_result = $blocked_message;
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
+    $filename = isset($_FILES['file']['name']) ? $_FILES['file']['name'] : '';
+    $result = '';
+    $error_count = 0;
+    if ($filename === '') {
+        $result = 'fail';
+        log_action($current_user, 'file_upload', '未选择文件', $result);
+    } else {
+        $file = $_FILES['file'];
+        $tmp_name = $file['tmp_name'];
+        $upload_dir = __DIR__ . '/uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $can_upload = false;
 
-    if ($can_upload) {
-        $target = $upload_dir . basename($filename);
-        if (move_uploaded_file($tmp_name, $target)) {
-            $upload_result = "<pre>文件 " . htmlspecialchars($filename) . " 上传成功！</pre>";
+        // Level 1 (Low): 无防护
+        if ($level == 1) {
+            $can_upload = true;
+        }
+        // Level 2 (Medium): 黑名单过滤
+        if ($level == 2) {
+            $can_upload = sanitize_upload($filename, 2);
+            if (!$can_upload) $upload_result = $blocked_message;
+        }
+        // Level 3 (High): 仅允许图片类型
+        if ($level == 3) {
+            $can_upload = sanitize_upload($filename, 3);
+            if (!$can_upload) $upload_result = $blocked_message;
+        }
+        // Level 4 (Impossible): 严格MIME类型+后缀白名单
+        if ($level == 4) {
+            $can_upload = sanitize_upload($filename, 4);
+            if (!$can_upload) $upload_result = $blocked_message;
+        }
+
+        if ($can_upload) {
+            $target = $upload_dir . basename($filename);
+            if (move_uploaded_file($tmp_name, $target)) {
+                $upload_result = "<pre>文件 " . htmlspecialchars($filename) . " 上传成功！</pre>";
+                $result = 'success';
+            } else {
+                $upload_result = "<pre>文件上传失败！</pre>";
+                $result = 'fail';
+            }
         } else {
             $upload_result = "<pre>文件上传失败！</pre>";
+            $result = 'fail';
         }
+        log_action($current_user, 'file_upload', '上传文件: ' . $filename, $result);
     }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'upload';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 ?>
 
@@ -123,10 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         <div class="header-content">
             <h1>文件上传靶场(File Upload)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="file.php" class="btn-prev">上一关</a>
-                <a href="insecure.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="file.php" class="btn-dark">上一关</a>
+                <a href="insecure.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

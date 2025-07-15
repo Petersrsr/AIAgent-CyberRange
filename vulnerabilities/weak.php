@@ -4,6 +4,8 @@
  * 弱会话ID靶场页面
  */
 
+require_once __DIR__.'/../db.php';
+
 // ---- 靶场逻辑 ----
 
 // 默认难度级别
@@ -47,6 +49,7 @@ $login_result = '';
 $session_id = '';
 $username = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     if ($username !== '') {
         $session_id = generate_weak_session_id($level);
@@ -57,6 +60,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $login_result = "<pre style='color:red'>请输入用户名！</pre>";
     }
+    // 这里假设有变量 $weak_result 表示操作结果
+    $result = (isset($weak_result) && strpos($weak_result, '成功') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'weak_session', '弱会话ID操作', $result);
+
+    $error_count = 0;
+    if (isset($weak_message) && strpos($weak_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'weak';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 
 // 检查当前cookie
@@ -83,10 +103,10 @@ $current_sid = isset($_COOKIE['WEAKSESSID']) ? $_COOKIE['WEAKSESSID'] : '';
         <div class="header-content">
             <h1>弱会话ID靶场(Weak Session IDs)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="Dom.php" class="btn-prev">上一关</a>
-                <a href="csp.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="Dom.php" class="btn-dark">上一关</a>
+                <a href="csp.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

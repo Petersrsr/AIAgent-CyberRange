@@ -50,6 +50,7 @@ if ($level == 4 && time() < $_SESSION['lockout_time']) {
 
 // 处理表单提交
 $login_message = '';
+require_once __DIR__.'/../db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$is_locked_out) {
     
     // Level 3 & 4: 验证 CSRF Token
@@ -64,16 +65,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$is_locked_out) {
         // 获取表单输入的用户名和密码
         $input_user = isset($_POST['username']) ? trim($_POST['username']) : '';
         $input_pass = isset($_POST['password']) ? trim($_POST['password']) : '';
+        $current_user = $_SESSION['username'] ?? 'guest';
 
         // Level 2: 强制延迟
         if ($level == 2) {
             sleep(1);
         }
 
-        if ($input_user === '' || $input_pass === '') {
-            $login_message = '<span style="color:red;">用户名或密码未输入！</span>';
+        if ($input_user === '') {
+            $login_message = '<span style="color:red;">用户名未输入！</span>';
+            log_action($current_user, 'forcebreak', '用户名未输入', 'fail');
+        } elseif ($input_pass === '') {
+            $login_message = '<span style="color:red;">密码未输入！</span>';
+            log_action($current_user, 'forcebreak', '密码未输入', 'fail');
         } elseif ($input_user === $valid_user && $input_pass === $valid_pass) {
             $login_message = '<span style="color:green;">登录成功！</span>';
+            log_action($current_user, 'forcebreak', '暴力破解登录成功', 'success');
             if ($level == 4) { // 登录成功后重置计数器
                 $_SESSION['failed_attempts'] = 0;
                 $_SESSION['lockout_time'] = 0;
@@ -86,8 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$is_locked_out) {
             if ($level == 1) { 
                  if ($input_user !== $valid_user) {
                     $login_message = '<span style="color:red;">用户名错误！</span>';
+                    log_action($current_user, 'forcebreak', '用户名错误', 'fail');
                 } elseif ($input_pass !== $valid_pass) {
                     $login_message = '<span style="color:red;">密码错误！</span>';
+                    log_action($current_user, 'forcebreak', '密码错误', 'fail');
                 }
             }
             
@@ -101,6 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$is_locked_out) {
             }
         }
     }
+    $error_count = 0;
+    if ($login_message && strpos($login_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'forcebreak';
+    $level_str = (string)$level;
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 
 // Level 3 & 4: 每次请求后都重新生成 Token
@@ -125,10 +147,10 @@ if ($level >= 3) {
         <div class="header-content">
             <h1>暴力破解靶场 (Brute Force)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="file.php" class="btn-prev">上一关</a>
-                <a href="command.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="file.php" class="btn-dark">上一关</a>
+                <a href="command.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

@@ -23,6 +23,25 @@ $level = isset($_GET['level']) ? intval($_GET['level']) : 1;
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['level'])) {
     $_POST = [];
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $dom_message = $_POST['message'];
+    $error_count = 0;
+    if (isset($dom_message) && strpos($dom_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'dom';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
+}
+
+require_once __DIR__.'/../db.php';
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -91,10 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['level'])) {
         <div class="header-content">
             <h1>Dom型XSS靶场(DOM XSS)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="xss.php" class="btn-prev">上一关</a>
-                <a href="Weak.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="xss.php" class="btn-dark">上一关</a>
+                <a href="Weak.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

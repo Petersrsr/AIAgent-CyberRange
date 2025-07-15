@@ -52,8 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             if ($insert_stmt->execute()) {
                 $success_message = '注册成功！现在您可以 <a href="login.php">登录</a>。';
+                // log_action($username, 'register', '用户注册', 'success'); // Removed as per edit hint
             } else {
                 $error_message = '注册失败，请稍后再试';
+                // log_action($username, 'register', '用户注册', 'fail'); // Removed as per edit hint
             }
             $insert_stmt->close();
         }

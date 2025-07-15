@@ -30,14 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['level'])) {
 $xss_result = '';
 $blocked_message = '';
 
-// 数据库连接（修正用户名和密码为aibachang）
-$mysqli = new mysqli("localhost", "aibachang", "aibachang", "aibachang");
-if ($mysqli->connect_errno) {
-    die("数据库连接失败: " . $mysqli->connect_error);
-}
+require_once __DIR__.'/../db.php';
 
 // 创建存储型XSS留言表（如不存在）
-$mysqli->query("CREATE TABLE IF NOT EXISTS xss_stored_messages (
+$conn->query("CREATE TABLE IF NOT EXISTS xss_stored_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(64) NOT NULL,
     content TEXT NOT NULL,
@@ -46,7 +42,7 @@ $mysqli->query("CREATE TABLE IF NOT EXISTS xss_stored_messages (
 
 // 清空留言功能
 if (isset($_GET['clear']) && $_GET['clear'] === '1') {
-    $mysqli->query("TRUNCATE TABLE xss_stored_messages");
+    $conn->query("TRUNCATE TABLE xss_stored_messages");
     header("Location: xss.php?level=" . $level);
     exit();
 }
@@ -80,6 +76,7 @@ function sanitize_xss($input, $level) {
 
 $user_input = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
     $user_input = isset($_POST['message']) ? $_POST['message'] : '';
     $display_input = '';
     $filtered = null;
@@ -97,17 +94,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($filtered !== null && $filtered !== '' && $xss_result === '') {
         // 存储留言
-        $stmt = $mysqli->prepare("INSERT INTO xss_stored_messages (username, content) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO xss_stored_messages (username, content) VALUES (?, ?)");
         $stmt->bind_param("ss", $username, $filtered);
         $stmt->execute();
         $stmt->close();
         $xss_result = "<div>留言已提交！</div>";
     }
+    $result = (isset($xss_result) && strpos($xss_result, '留言已提交') !== false) ? 'success' : 'fail';
+    log_action($current_user, 'xss', 'XSS操作', $result);
+
+    $error_count = 0;
+    if (isset($xss_result) && strpos($xss_result, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'xss';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
 }
 
 // 获取所有留言
 $messages = [];
-$res = $mysqli->query("SELECT username, content, created_at FROM xss_stored_messages ORDER BY id DESC");
+$res = $conn->query("SELECT username, content, created_at FROM xss_stored_messages ORDER BY id DESC");
 if ($res) {
     while ($row = $res->fetch_assoc()) {
         $messages[] = $row;
@@ -146,6 +159,21 @@ if ($res) {
             background: #f5f5f5 !important; 
             color: #111 !important;
         }
+        .btn-dark {
+            background: #343a40 !important;
+            color: #fff !important;
+            border-radius: 4px;
+            padding: 6px 16px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            border: none;
+            transition: background 0.2s;
+            box-shadow: none;
+        }
+        .btn-dark:hover {
+            background: #495057 !important;
+        }
     </style>
     <script>
         // 优化：点击难度切换时重置表单
@@ -177,10 +205,10 @@ if ($res) {
         <div class="header-content">
             <h1>存储型XSS靶场(Stored XSS)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="Reflected.php" class="btn-prev">上一关</a>
-                <a href="Dom.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="Reflected.php" class="btn-dark">上一关</a>
+                <a href="Dom.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>

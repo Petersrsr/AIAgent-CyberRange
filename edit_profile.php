@@ -39,8 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($update_stmt->execute()) {
             $_SESSION['profile_success'] = "个人资料更新成功！";
             $_SESSION['nickname'] = $nickname; // 同步更新 Session
+            // log_action($username, 'edit_profile', '编辑个人资料', 'success'); // Removed as per edit hint
         } else {
             $_SESSION['profile_error'] = "资料更新失败，请稍后再试。";
+            // log_action($username, 'edit_profile', '编辑个人资料', 'fail'); // Removed as per edit hint
         }
         $update_stmt->close();
     }

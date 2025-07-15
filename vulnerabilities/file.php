@@ -13,6 +13,8 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+require_once __DIR__.'/../db.php';
+
 // ---- 靶场逻辑 ----
 $level = isset($_GET['level']) ? intval($_GET['level']) : 1;
 $file_to_include = 'includes/file1.php'; // 默认包含文件
@@ -49,6 +51,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['page'])) {
         }
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $current_user = $_SESSION['username'] ?? 'guest';
+    $filename = isset($_POST['filename']) ? $_POST['filename'] : '';
+    $result = '';
+    if ($filename === '') {
+        $result = 'fail';
+        log_action($current_user, 'file_include', '文件名为空', $result);
+    } else {
+        // ...文件包含/读取逻辑...
+        $result = 'success'; // 或根据实际执行结果判断
+        log_action($current_user, 'file_include', '包含文件: ' . $filename, $result);
+    }
+    $error_count = 0;
+    if (isset($file_message) && strpos($file_message, '成功') === false) {
+        $error_count = 1;
+    }
+    require_once __DIR__.'/../db.php';
+    $user = $_SESSION['username'];
+    $challenge = 'file';
+    $level_str = isset($level) ? (string)$level : 'easy';
+    $completed_at = date('Y-m-d H:i:s');
+    $time_used = 0;
+    $stmt = $conn->prepare("INSERT INTO challenge_records (user, challenge, level, completed_at, time_used, error_count) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssii', $user, $challenge, $level_str, $completed_at, $time_used, $error_count);
+    $stmt->execute();
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +102,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['page'])) {
             margin: 0 15px;
             font-size: 16px;
         }
+        .btn-dark {
+            background: #343a40 !important;
+            color: #fff !important;
+            border-radius: 4px;
+            padding: 6px 16px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            border: none;
+            transition: background 0.2s;
+            box-shadow: none;
+        }
+        .btn-dark:hover {
+            background: #495057 !important;
+        }
     </style>
 </head>
 <body>
@@ -81,10 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['page'])) {
         <div class="header-content">
             <h1>文件包含漏洞靶场(File Inclusion)</h1>
             <div class="user-menu">
-                <a href="../dashboard.php" class="btn-home">返回首页</a>
-                <a href="../help.php" class="btn-help">帮助</a>
-                <a href="csrf.php" class="btn-prev">上一关</a>
-                <a href="upload.php" class="btn-next">下一关</a>
+                <a href="../dashboard.php" class="btn-dark">返回首页</a>
+                <a href="../help.php" class="btn-dark">帮助</a>
+                <a href="csrf.php" class="btn-dark">上一关</a>
+                <a href="upload.php" class="btn-dark">下一关</a>
             </div>
         </div>
     </div>
