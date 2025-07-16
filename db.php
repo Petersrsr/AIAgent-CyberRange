@@ -5,7 +5,7 @@
  */
 
 // 数据库配置
-$db_host = '127.0.0.1: 33306';       // 数据库主机，通常是 localhost 或 127.0.0.1
+$db_host = '127.0.0.1: 3306';       // 数据库主机，通常是 localhost 或 127.0.0.1
 $db_user = 'aibachang';       // 数据库用户名
 $db_pass = 'aibachang';       // 数据库密码
 $db_name = 'aibachang';       // 数据库名称
